@@ -10,6 +10,7 @@ type IServiceContainer interface {
 	InitHealthCheckerController() controller.IHealthCheckerController
 	InitPokedexController() controller.IPokedexController
 	InitMigrationInitializerController() controller.IMigrationInitializerController
+	InitTrainerController() controller.ITrainerController
 }
 
 type serviceContainer struct {
@@ -28,6 +29,11 @@ func (s *serviceContainer) InitPokedexController() controller.IPokedexController
 func (s *serviceContainer) InitMigrationInitializerController() controller.IMigrationInitializerController {
 	initializer := service.NewMigrationInitializer(s.db)
 	return controller.NewMigrationInitializerController(initializer)
+}
+
+func (s *serviceContainer) InitTrainerController() controller.ITrainerController {
+	trainerService := service.NewTrainerService(s.db)
+	return controller.NewTrainerController(trainerService)
 }
 
 func NewServiceContainer() IServiceContainer {

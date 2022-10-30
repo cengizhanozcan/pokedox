@@ -3,14 +3,13 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"pokemon/model/migration"
 	"pokemon/service"
 	"strconv"
 )
 
 type IPokedexController interface {
 	GetPokemon(context *gin.Context)
-	AddPokemon(context *gin.Context)
+	GetPokemonByName(context *gin.Context)
 }
 
 type pokedexController struct {
@@ -23,13 +22,10 @@ func (p *pokedexController) GetPokemon(context *gin.Context) {
 	context.JSON(http.StatusOK, pokemon)
 }
 
-func (p *pokedexController) AddPokemon(context *gin.Context) {
-	var pokemon migration.Pokemon
-	if err := context.BindJSON(&pokemon); err != nil {
-		return
-	}
-	p.pokedexService.AddPokemon(&pokemon)
-	context.Status(http.StatusOK)
+func (p *pokedexController) GetPokemonByName(context *gin.Context) {
+	name := context.Param("name")
+	pokemon := p.pokedexService.GetPokemonByName(name)
+	context.JSON(http.StatusOK, pokemon)
 }
 
 func NewPokedexController(pokedexService service.IPokedexService) IPokedexController {

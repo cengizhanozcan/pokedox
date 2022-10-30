@@ -2,44 +2,39 @@ package service
 
 import (
 	"pokemon/middleware/database"
-	"pokemon/model/migration"
+	"pokemon/model/domain"
 )
 
 type IPokedexService interface {
-	GetPokemon(id uint64) *migration.Pokemon
-	AddPokemon(pokemon *migration.Pokemon)
+	GetPokemon(id uint64) *domain.Pokemon
+	GetPokemonByName(name string) *domain.Pokemon
 }
 
 type pokedexService struct {
 	db *database.Database
 }
 
-func (p *pokedexService) GetPokemon(id uint64) *migration.Pokemon {
-	for _, pokemon := range *p.db.GetPokemons() {
-		if pokemon.ID == id {
-			//return &pokemon
-		}
+func (p *pokedexService) GetPokemon(id uint64) *domain.Pokemon {
+	pokemon := domain.Pokemon{}
+	p.db.Instance.
+		Preload("Types").
+		Preload("PokemonImage").
+		Preload("PokemonBase").
+		Preload("PokemonProfile").
+		First(&pokemon, "id=?", id)
+	if pokemon.ID != 0 {
+		return &pokemon
 	}
-
 	return nil
 }
 
-func (p *pokedexService) GetPokemonByName(name string) *migration.Pokemon {
-	for _, pokemon := range *p.db.GetPokemons() {
-		if pokemon.Name == name {
-			//return &pokemon
-		}
+func (p *pokedexService) GetPokemonByName(name string) *domain.Pokemon {
+	pokemon := domain.Pokemon{}
+	p.db.Instance.First(&pokemon, "name=?", name)
+	if pokemon.ID != 0 {
+		return &pokemon
 	}
-
 	return nil
-}
-
-func (p *pokedexService) AddPokemon(pokemon *migration.Pokemon) {
-	if p.GetPokemonByName(pokemon.Name.English) != nil {
-		return
-	}
-
-	//p.db.AddPokemon(pokemon)
 }
 
 func NewPokedexService(db *database.Database) IPokedexService {

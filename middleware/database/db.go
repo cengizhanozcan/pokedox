@@ -8,16 +8,7 @@ import (
 )
 
 type Database struct {
-	pokemons *[]domain.Pokemon
 	Instance *gorm.DB
-}
-
-func (d *Database) GetPokemons() *[]domain.Pokemon {
-	return d.pokemons
-}
-
-func (d *Database) AddPokemon(pokemon *domain.Pokemon) {
-	*d.pokemons = append(*d.pokemons, *pokemon)
 }
 
 func NewInMemoryDb() *Database {
@@ -39,6 +30,7 @@ func initDb() *gorm.DB {
 	db.AutoMigrate(&domain.PokemonBase{})
 	db.AutoMigrate(&domain.PokemonProfile{})
 	db.AutoMigrate(&domain.Pokemon{})
+	db.AutoMigrate(&domain.Trainer{})
 
 	return db
 }

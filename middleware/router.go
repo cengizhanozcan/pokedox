@@ -18,15 +18,21 @@ func (router *router) InitRouter() *gin.Engine {
 	healthGroup := r.Group("/_monitoring")
 	healthGroup.GET("/ready", serviceContainer.InitHealthCheckerController().Ready)
 
-	initializer := r.Group("/initializer")
+	initializerGroup := r.Group("/initializer")
 	migrationInitializerController := serviceContainer.InitMigrationInitializerController()
-	initializer.POST("/pokemonType", migrationInitializerController.InitPokemonTypes)
-	initializer.POST("/pokemon", migrationInitializerController.InitPokemons)
+	initializerGroup.POST("/pokemonType", migrationInitializerController.InitPokemonTypes)
+	initializerGroup.POST("/pokemon", migrationInitializerController.InitPokemons)
 
 	pokedexGroup := r.Group("/pokedex")
 	pokedexController := serviceContainer.InitPokedexController()
 	pokedexGroup.GET("/:id", pokedexController.GetPokemon)
-	pokedexGroup.POST("/", pokedexController.AddPokemon)
+	pokedexGroup.GET("/byName/:name", pokedexController.GetPokemonByName)
+
+	trainerGroup := r.Group("/trainer")
+	trainerController := serviceContainer.InitTrainerController()
+	trainerGroup.GET("/:id", trainerController.GetTrainer)
+	trainerGroup.GET("/byNickname/:nickname", trainerController.GetTrainerByNickname)
+	trainerGroup.POST("/", trainerController.CreateTrainer)
 
 	return r
 }

@@ -8,12 +8,12 @@ import (
 type PokemonBase struct {
 	gorm.Model
 	PokemonID uint64
-	HP        int `json:"HP"`
-	Attack    int `json:"Attack"`
-	Defense   int `json:"Defense"`
-	SpAttack  int `json:"Sp. Attack"`
-	SpDefense int `json:"Sp. Defense"`
-	Speed     int `json:"Speed"`
+	HP        int
+	Attack    int
+	Defense   int
+	SpAttack  int
+	SpDefense int
+	Speed     int
 	CreatedAt time.Time
 	UpdatedAt *time.Time
 	DeletedAt *time.Time
