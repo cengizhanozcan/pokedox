@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"pokemon/model"
+	"pokemon/model/migration"
 	"pokemon/service"
 	"strconv"
 )
@@ -24,7 +24,7 @@ func (p *pokedexController) GetPokemon(context *gin.Context) {
 }
 
 func (p *pokedexController) AddPokemon(context *gin.Context) {
-	var pokemon model.Pokemon
+	var pokemon migration.Pokemon
 	if err := context.BindJSON(&pokemon); err != nil {
 		return
 	}

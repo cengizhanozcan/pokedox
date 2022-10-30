@@ -1,4 +1,4 @@
-package model
+package migration
 
 type PokemonImage struct {
 	Sprite    string `json:"sprite"`

@@ -1,4 +1,4 @@
-package model
+package migration
 
 type PokemonName struct {
 	English  string `json:"english"`

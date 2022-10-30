@@ -1,46 +1,47 @@
 package service
 
 import (
-	"pokemon/model"
+	"pokemon/middleware/database"
+	"pokemon/model/migration"
 )
 
 type IPokedexService interface {
-	GetPokemon(id uint64) *model.Pokemon
-	AddPokemon(pokemon *model.Pokemon)
+	GetPokemon(id uint64) *migration.Pokemon
+	AddPokemon(pokemon *migration.Pokemon)
 }
 
 type pokedexService struct {
-	db *model.InMemoryDb
+	db *database.Database
 }
 
-func (p *pokedexService) GetPokemon(id uint64) *model.Pokemon {
+func (p *pokedexService) GetPokemon(id uint64) *migration.Pokemon {
 	for _, pokemon := range *p.db.GetPokemons() {
-		if pokemon.Id == id {
-			return &pokemon
+		if pokemon.ID == id {
+			//return &pokemon
 		}
 	}
 
 	return nil
 }
 
-func (p *pokedexService) GetPokemonByName(name string) *model.Pokemon {
+func (p *pokedexService) GetPokemonByName(name string) *migration.Pokemon {
 	for _, pokemon := range *p.db.GetPokemons() {
-		if pokemon.Name.English == name {
-			return &pokemon
+		if pokemon.Name == name {
+			//return &pokemon
 		}
 	}
 
 	return nil
 }
 
-func (p *pokedexService) AddPokemon(pokemon *model.Pokemon) {
+func (p *pokedexService) AddPokemon(pokemon *migration.Pokemon) {
 	if p.GetPokemonByName(pokemon.Name.English) != nil {
 		return
 	}
 
-	p.db.AddPokemon(pokemon)
+	//p.db.AddPokemon(pokemon)
 }
 
-func NewPokedexService(db *model.InMemoryDb) IPokedexService {
+func NewPokedexService(db *database.Database) IPokedexService {
 	return &pokedexService{db: db}
 }

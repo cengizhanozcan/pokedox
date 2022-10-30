@@ -18,6 +18,11 @@ func (router *router) InitRouter() *gin.Engine {
 	healthGroup := r.Group("/_monitoring")
 	healthGroup.GET("/ready", serviceContainer.InitHealthCheckerController().Ready)
 
+	initializer := r.Group("/initializer")
+	migrationInitializerController := serviceContainer.InitMigrationInitializerController()
+	initializer.POST("/pokemonType", migrationInitializerController.InitPokemonTypes)
+	initializer.POST("/pokemon", migrationInitializerController.InitPokemons)
+
 	pokedexGroup := r.Group("/pokedex")
 	pokedexController := serviceContainer.InitPokedexController()
 	pokedexGroup.GET("/:id", pokedexController.GetPokemon)
